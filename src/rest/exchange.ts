@@ -272,7 +272,7 @@ export class ExchangeAPI {
     }
   }
   //Transfer SPOT assets i.e PURR to another wallet (doesn't touch bridge, so no fees)
-  async spotTransfer(destination: string, token: string, amount: string): Promise<any> {
+  async spotTransfer(destination: string, token: string, amount: string, nonce: number): Promise<any> {
     await this.parent.ensureInitialized();
     try {
       const action = {
@@ -282,7 +282,7 @@ export class ExchangeAPI {
         destination,
         token,
         amount,
-        time: Date.now()
+        time: nonce
       };
       const signature = await signUserSignedAction(
         this.wallet,
@@ -297,7 +297,7 @@ export class ExchangeAPI {
         'HyperliquidTransaction:SpotSend', this.IS_MAINNET
       );
 
-      const payload = { action, nonce: action.time, signature };
+      const payload = { action, nonce: nonce, signature };
       return this.httpApi.makeRequest(payload, 1);
     } catch (error) {
       throw error;
