@@ -252,7 +252,7 @@ export class ExchangeAPI {
   }
 
   //Takes from the perps wallet and sends to another wallet without the $1 fee (doesn't touch bridge, so no fees)
-  async usdTransfer(destination: string, amount: number): Promise<any> {
+  async usdTransfer(destination: string, amount: number, nonce: number): Promise<any> {
     await this.parent.ensureInitialized();
     try {
         const action = {
@@ -261,7 +261,7 @@ export class ExchangeAPI {
             signatureChainId: '0xa4b1',
             destination: destination,
             amount: amount.toString(),
-            time: Date.now()
+            time: nonce
         };
         const signature = await signUsdTransferAction(this.wallet, action, this.IS_MAINNET);
 
