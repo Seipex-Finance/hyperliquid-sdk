@@ -530,4 +530,21 @@ export class ExchangeAPI {
           throw error;
       }
   }
+
+  async switchBlocks(usingBigBlocks: boolean, rawResponse: boolean = false): Promise<any> {
+    await this.parent.ensureInitialized();
+    try {
+        const action = {
+            type: "evmUserModify",
+            usingBigBlocks: usingBigBlocks
+        };
+        const nonce = Date.now();
+        const signature = await signL1Action(this.wallet, action, null, nonce, this.IS_MAINNET);
+
+        const payload = { action, nonce, signature };
+        return this.httpApi.makeRequest(payload, 1);
+    } catch (error) {
+        throw error;
+    }
+  }
 }
